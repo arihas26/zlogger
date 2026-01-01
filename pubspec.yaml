@@ -1,0 +1,11 @@
+name: zlogger
+description: A lightweight, zone-based structured logger for Dart. Features MDC-style context propagation, named loggers, and JSON output.
+version: 0.1.0
+repository: https://github.com/ssk/zlogger
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.24.0
