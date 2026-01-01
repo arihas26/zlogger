@@ -820,8 +820,10 @@ void main() {
       expect(output.stdout, contains('[INFO ]'));
       expect(output.stdout, contains('test message'));
       // ISO 8601 timestamp pattern
-      expect(output.stdout,
-          matches(RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')));
+      expect(
+        output.stdout,
+        matches(RegExp(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')),
+      );
     });
 
     test('text format includes fields', () async {
