@@ -7,7 +7,8 @@ import 'package:zlogger/zlogger.dart';
 
 /// Captures stdout/stderr output during a function execution.
 Future<({String stdout, String stderr})> captureOutput(
-    Future<void> Function() fn) async {
+  Future<void> Function() fn,
+) async {
   final stdoutBuffer = StringBuffer();
   final stderrBuffer = StringBuffer();
 
