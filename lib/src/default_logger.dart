@@ -8,6 +8,9 @@ import 'record.dart';
 /// Handler for log records.
 typedef LogHandler = void Function(LogRecord record);
 
+/// Formatter for log records.
+typedef LogFormatter = String Function(LogRecord record);
+
 /// ANSI color codes for terminal output.
 class _AnsiColors {
   static const reset = '\x1B[0m';
@@ -25,13 +28,18 @@ class DefaultLogger implements Logger {
   final LogLevel minLevel;
 
   /// Output as JSON (true) or text (false).
+  /// Ignored if [formatter] is provided.
   final bool json;
 
   /// Enable colored output (default: true).
+  /// Ignored if [formatter] is provided.
   final bool color;
 
   /// Custom log handler. If null, outputs to stdout/stderr.
   final LogHandler? handler;
+
+  /// Custom formatter. If null, uses default text or JSON format.
+  final LogFormatter? formatter;
 
   /// Default fields to include in every log.
   final Map<String, dynamic> _defaultFields;
@@ -42,6 +50,7 @@ class DefaultLogger implements Logger {
     this.json = false,
     this.color = true,
     this.handler,
+    this.formatter,
     Map<String, dynamic> defaultFields = const {},
   }) : _defaultFields = defaultFields;
 
@@ -77,6 +86,7 @@ class DefaultLogger implements Logger {
       json: json,
       color: color,
       handler: handler,
+      formatter: formatter,
       defaultFields: {..._defaultFields, ...fields},
     );
   }
@@ -108,7 +118,14 @@ class DefaultLogger implements Logger {
 
   void _defaultOutput(LogRecord record) {
     final output = record.level.index >= LogLevel.warn.index ? stderr : stdout;
-    final text = json ? jsonEncode(record.toJson()) : _formatText(record);
+    final String text;
+    if (formatter != null) {
+      text = formatter!(record);
+    } else if (json) {
+      text = jsonEncode(record.toJson());
+    } else {
+      text = _formatText(record);
+    }
     output.writeln(text);
   }
 

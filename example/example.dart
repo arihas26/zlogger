@@ -27,14 +27,14 @@ void main() async {
   print('\n=== Zone Context (MDC-style) ===\n');
 
   // Context propagation - request_id flows through all log calls
-  await Log.runWithContextAsync({'request_id': 'req-abc-123'}, () async {
+  await Log.scope({'request_id': 'req-abc-123'}, () async {
     log.info('Request started');
 
     // Service logs automatically include request_id
     await userService.findUser('456');
 
     // Nested context
-    Log.runWithContext({'user_id': 'user-789'}, () {
+    Log.scope({'user_id': 'user-789'}, () {
       log.info('Processing for user');
     });
 
@@ -64,7 +64,7 @@ void main() async {
 zlogger provides:
   1. log.info() - Simple top-level logging
   2. Log.named('ClassName') - Named loggers with class name
-  3. Log.runWithContext() - Zone-based context propagation (MDC-style)
+  3. Log.scope() - Zone-based context propagation (MDC-style)
   4. Structured logging with fields
   5. JSON output support
   6. Colored console output

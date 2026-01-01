@@ -96,24 +96,21 @@ class Log {
   /// Runs the given function within a log context zone.
   ///
   /// All [Log] calls within [fn] will include [fields] automatically.
+  /// Works with both sync and async functions.
   ///
   /// Example:
   /// ```dart
-  /// Log.runWithContext({'request_id': 'abc-123'}, () {
+  /// // Sync
+  /// Log.scope({'request_id': 'abc-123'}, () {
   ///   log.info('Processing');  // includes request_id
+  /// });
+  ///
+  /// // Async
+  /// await Log.scope({'request_id': 'abc-123'}, () async {
   ///   await someService.doWork();  // logs here also include request_id
   /// });
   /// ```
-  static R runWithContext<R>(Map<String, dynamic> fields, R Function() fn) {
-    final merged = {..._zoneFields, ...fields};
-    return runZoned(fn, zoneValues: {_logContextKey: merged});
-  }
-
-  /// Runs the given async function within a log context zone.
-  static Future<R> runWithContextAsync<R>(
-    Map<String, dynamic> fields,
-    Future<R> Function() fn,
-  ) {
+  static R scope<R>(Map<String, dynamic> fields, R Function() fn) {
     final merged = {..._zoneFields, ...fields};
     return runZoned(fn, zoneValues: {_logContextKey: merged});
   }

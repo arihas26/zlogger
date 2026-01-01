@@ -19,7 +19,7 @@
 ///   log.debug('Debug info', {'key': 'value'});
 ///
 ///   // With context (request_id propagates to all log calls)
-///   Log.runWithContext({'request_id': 'abc-123'}, () {
+///   Log.scope({'request_id': 'abc-123'}, () {
 ///     log.info('Processing request');
 ///     myService.doWork(); // logs here also include request_id
 ///   });

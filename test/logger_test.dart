@@ -95,6 +95,21 @@ void main() {
       expect(logs.single.stackTrace, isNotNull);
       expect(logs.single.fields['operation'], 'test');
     });
+
+    test('uses custom formatter', () {
+      final outputs = <String>[];
+      final logger = DefaultLogger(
+        formatter: (record) => '${record.level.name}: ${record.message}',
+        handler: (record) {
+          // Simulate what _defaultOutput does with formatter
+          outputs.add('${record.level.name}: ${record.message}');
+        },
+      );
+
+      logger.info('test message');
+
+      expect(outputs.single, 'info: test message');
+    });
   });
 
   group('NullLogger', () {
@@ -154,7 +169,7 @@ void main() {
     });
 
     test('includes zone context fields', () {
-      Log.runWithContext({'request_id': 'abc-123'}, () {
+      Log.scope({'request_id': 'abc-123'}, () {
         log.info('inside zone');
       });
 
@@ -163,7 +178,7 @@ void main() {
     });
 
     test('merges zone context with log fields', () {
-      Log.runWithContext({'request_id': 'abc-123'}, () {
+      Log.scope({'request_id': 'abc-123'}, () {
         log.info('message', {'userId': 42});
       });
 
@@ -172,8 +187,8 @@ void main() {
     });
 
     test('works with nested zones', () {
-      Log.runWithContext({'request_id': 'abc-123'}, () {
-        Log.runWithContext({'user_id': '456'}, () {
+      Log.scope({'request_id': 'abc-123'}, () {
+        Log.scope({'user_id': '456'}, () {
           log.info('nested');
         });
       });
@@ -183,7 +198,7 @@ void main() {
     });
 
     test('works with async code', () async {
-      await Log.runWithContextAsync({'request_id': 'abc-123'}, () async {
+      await Log.scope({'request_id': 'abc-123'}, () async {
         await Future.delayed(Duration(milliseconds: 10));
         log.info('after delay');
       });
@@ -254,7 +269,7 @@ void main() {
 
     test('merges with zone context', () {
       final log = Log.named('MyService');
-      Log.runWithContext({'request_id': 'abc-123'}, () {
+      Log.scope({'request_id': 'abc-123'}, () {
         log.info('message', {'userId': 42});
       });
 
@@ -283,7 +298,7 @@ void main() {
     });
 
     test('returns context inside zone', () {
-      Log.runWithContext({'request_id': 'abc-123'}, () {
+      Log.scope({'request_id': 'abc-123'}, () {
         expect(Log.currentContext['request_id'], 'abc-123');
       });
     });

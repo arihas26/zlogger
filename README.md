@@ -1,6 +1,8 @@
 # zlogger
 
-A lightweight, zone-based structured logger for Dart with MDC-style context propagation.
+[![日本語](https://img.shields.io/badge/lang-日本語-blue.svg)](README_ja.md)
+
+A lightweight, zone-based structured logger for Dart with propagation.
 
 ## Features
 
@@ -52,7 +54,7 @@ Propagate context (like `request_id`) through your entire call stack:
 Future<void> handleRequest(Request request) async {
   final requestId = generateRequestId();
 
-  await Log.runWithContextAsync({'request_id': requestId}, () async {
+  await Log.scope({'request_id': requestId}, () async {
     log.info('Request started');
 
     // All logs in services automatically include request_id!
@@ -92,6 +94,17 @@ LogConfig.global = DefaultLogger(json: true);
 
 ```dart
 LogConfig.global = DefaultLogger(color: false);
+```
+
+### Custom Formatter
+
+```dart
+LogConfig.global = DefaultLogger(
+  formatter: (record) {
+    return '[${record.level.name.toUpperCase()}] ${record.message}';
+  },
+);
+// Output: [INFO] Application started
 ```
 
 ### Custom Handler
@@ -135,12 +148,12 @@ log.info('message');  // includes logger=MyClass
 
 ```dart
 // Sync
-Log.runWithContext({'request_id': 'abc'}, () {
+Log.scope({'request_id': 'abc'}, () {
   log.info('includes request_id');
 });
 
 // Async
-await Log.runWithContextAsync({'request_id': 'abc'}, () async {
+await Log.scope({'request_id': 'abc'}, () async {
   await someAsyncWork();
   log.info('still includes request_id');
 });
