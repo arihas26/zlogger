@@ -1,6 +1,6 @@
 name: zlogger
 description: A lightweight, zone-based structured logger for Dart. Features context propagation, named loggers, and JSON output.
-version: 0.1.0
+version: 1.0.0
 repository: https://github.com/arihas26/zlogger
 
 environment:
