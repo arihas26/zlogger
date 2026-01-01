@@ -2,7 +2,7 @@
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 
-Dart向けの軽量なZoneベース構造化ロガー。MDCスタイルのコンテキスト伝播機能付き。
+Dart向けの軽量なZoneベース構造化ロガー。
 
 ## 特徴
 

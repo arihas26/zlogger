@@ -2,7 +2,7 @@
 
 [![日本語](https://img.shields.io/badge/lang-日本語-blue.svg)](README_ja.md)
 
-A lightweight, zone-based structured logger for Dart with propagation.
+A lightweight, zone-based structured logger for Dart.
 
 ## Features
 
